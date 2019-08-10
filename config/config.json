@@ -1,0 +1,18 @@
+{
+  "datasource": {
+    "Dialect": "mysql",
+    "Dburl": "root:root@tcp(localhost:3306)/onlinemall?charset=utf8&parseTime=True&loc=Local",
+    "MaxIdleConns": 10,
+    "MaxOpenConns": 50,
+    "ConnMaxLifetime": 2000,
+    "LogDir": "/data/app/gin",
+    "LogFile": "gorm"
+  },
+  "server": {
+    "Environment": "dev",
+    "Mod": "debug",
+    "LogDir": "/data/app/gin",
+    "LogFile": "app",
+    "Address": "localhost:9080"
+  }
+}
