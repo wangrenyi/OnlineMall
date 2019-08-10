@@ -9,39 +9,41 @@ import (
 	"time"
 )
 
-var loginUser = new(model.MstUserInfo)
+var loginUser = model.MstUserInfo{}
 
 func AuthLogin(context *gin.Context) {
 	defer common.Recover(context)
 
-	if err := context.ShouldBindJSON(loginUser); err != nil {
+	user := model.MstUserInfo{}
+	if err := context.ShouldBindJSON(&user); err != nil {
 		context.JSON(http.StatusOK, common.Error(http.StatusBadRequest, err.Error()))
 		return
 	}
 
-	loginCheck(loginUser)
+	loginCheck(&user)
 
-	token, err := GenerateToken(loginUser)
+	token, err := GenerateToken(user)
 	if err != nil {
 		context.JSON(http.StatusOK, common.Error(http.StatusInternalServerError, err.Error()))
 		return
 	}
 
 	context.JSON(http.StatusOK, common.AuthSuccess(token))
+	return
 }
 
 func RegisterUser(context *gin.Context) {
 	defer common.Recover(context)
 
-	registerUser := new(model.MstUserInfo)
-	if err := context.ShouldBindJSON(registerUser); err != nil {
+	registerUser := model.MstUserInfo{}
+	if err := context.ShouldBindJSON(&registerUser); err != nil {
 		context.JSON(http.StatusOK, common.Error(http.StatusBadRequest, err.Error()))
 		return
 	}
 
-	existUser := new(model.MstUserInfo)
+	existUser := model.MstUserInfo{}
 	connect := db.Connect()
-	connect.Where("login_name = ? and enabled = true ", loginUser.LoginName).First(existUser)
+	connect.Where("login_name = ? and enabled = true ", loginUser.LoginName).First(&existUser)
 
 	if existUser.LoginName == registerUser.LoginName && existUser.Password == registerUser.Password {
 		common.PanicError("The user already exists.")
@@ -57,28 +59,29 @@ func RegisterUser(context *gin.Context) {
 		registerUser.UpdateTime = time.Now()
 		registerUser.Enabled = true
 		registerUser.Version = 1
-		connect.Create(registerUser)
+		connect.Create(&registerUser)
 	}
 
 	context.JSON(http.StatusOK, common.Info())
+	return
 }
 
-func loginCheck(loginUser *model.MstUserInfo) {
-	user := new(model.MstUserInfo)
+func loginCheck(user *model.MstUserInfo) {
+	registerUser := model.MstUserInfo{}
 
 	connect := db.Connect()
-	connect.Where("login_name = ? and enabled = true ", loginUser.LoginName).First(user)
+	connect.Where("login_name = ? and enabled = true ", user.LoginName).First(&registerUser)
 
-	if user.LoginName == "" {
+	if registerUser.LoginName == "" {
 		common.PanicError("The user does not exist!")
 	}
-	if loginUser.Password != user.Password || loginUser.LoginName != user.LoginName {
+	if registerUser.Password != user.Password || registerUser.LoginName != user.LoginName {
 		common.PanicError("Incorrect account or password!")
 	}
 
-	loginUser = user
+	loginUser = registerUser
 }
 
 func GetLoginUser() model.MstUserInfo {
-	return *loginUser
+	return loginUser
 }

@@ -17,7 +17,7 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-func GenerateToken(loginUser *model.MstUserInfo) (string, error) {
+func GenerateToken(loginUser model.MstUserInfo) (string, error) {
 
 	expireTime := time.Now().Add(3 * time.Hour)
 	//username := util.EncodeMD5(loginUser.LoginName)

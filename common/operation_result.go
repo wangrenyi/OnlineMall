@@ -8,7 +8,7 @@ func Success(data interface{}) *Result {
 	return &Result{
 		"msg":        "Action successfully done.",
 		"statusCode": http.StatusOK,
-		"data":       &data,
+		"data":       data,
 	}
 }
 
