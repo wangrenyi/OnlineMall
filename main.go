@@ -19,7 +19,7 @@ func main() {
 	//配置跨域
 	engine.Use(cors.New(cors.Config{
 		AllowMethods:     []string{"GET", "POST"},
-		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "ACCESS_TOKEN"},
+		AllowHeaders:     []string{"Origin", "Content-Length", "Content-Type", "Authorization"},
 		AllowCredentials: false,
 		AllowAllOrigins:  true,
 		MaxAge:           12 * time.Hour,
