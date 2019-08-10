@@ -23,5 +23,9 @@ func initRouter(routerGroup *gin.RouterGroup) {
 	//user handler
 	handler.InitUserHandler(routerGroup)
 
+	//shops handler
+	handler.InitShopsHandler(routerGroup)
 
+	//goods handler
+	handler.InitGoodsHandler(routerGroup)
 }

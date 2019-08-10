@@ -1,7 +1,7 @@
 package model
 
 type OnlineMallGoods struct {
-	ID        string `json:"id"`
+	ID        string `gorm:"primary_key" json:"id"`
 	ShopsId   string `json:"shopsId"`
 	GoodsName string `json:"goodsName"`
 	Category  string `json:"category"`

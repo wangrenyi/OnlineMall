@@ -13,22 +13,23 @@ import (
 func InitUserHandler(routerGroup *gin.RouterGroup) {
 	userRouter := routerGroup.Group("/user")
 	{
-		userRouter.GET("/:loginid", getUserByLoginId)
+		userRouter.GET("/:loginId", getUserByLoginId)
 		userRouter.POST("", updateUser)
-		userRouter.DELETE("/:loginid", deleteUser)
+		userRouter.DELETE("/:loginId", deleteUser)
 	}
 }
 
 func getUserByLoginId(context *gin.Context) {
-	loginid := context.Param("loginid")
+	loginId := context.Param("loginId")
 	user := model.MstUserInfo{}
 	connect := db.Connect()
-	connect.Where("login_name = ?", loginid).First(&user)
+	connect.Where("login_name = ?", loginId).First(&user)
 	context.JSON(http.StatusOK, common.Success(user))
 	return
 }
 
 func updateUser(context *gin.Context) {
+
 	user := model.MstUserInfo{}
 	if err := context.ShouldBindJSON(&user); err != nil {
 		context.JSON(http.StatusOK, common.Error(http.StatusBadRequest, err.Error()))
@@ -41,23 +42,36 @@ func updateUser(context *gin.Context) {
 	user.UpdateUser = loginUser.LoginName
 
 	connect := db.Connect()
-	connect.Model(&user).Where("login_name = ?", user.LoginName).Updates(user)
+	tx := connect.Begin()
+	if err := tx.Model(&user).Where("login_name = ?", user.LoginName).Updates(user).Error; err != nil {
+		tx.Rollback()
+		context.JSON(http.StatusOK, common.Error(http.StatusInternalServerError, err.Error()))
+		return
+	}
+	tx.Commit()
+
 	context.JSON(http.StatusOK, common.Success(user))
 	return
 }
 
 func deleteUser(context *gin.Context) {
-	loginid := context.Param("loginid")
+	loginId := context.Param("loginId")
 
 	user := model.MstUserInfo{}
 	loginUser := security.GetLoginUser()
 	user.UpdateUser = loginUser.LoginName
 	user.UpdateTime = time.Now()
-	user.LoginName = loginid
-	user.Enabled = false
+	user.LoginName = loginId
+	user.Enabled = 0
 
 	connect := db.Connect()
-	connect.Model(&user).Where("login_name = ?", user.LoginName).Updates(user)
+	tx := connect.Begin()
+	if err := tx.Model(&user).Where("login_name = ?", user.LoginName).Updates(user).Error; err != nil {
+		tx.Rollback()
+		context.JSON(http.StatusOK, common.Error(http.StatusInternalServerError, err.Error()))
+		return
+	}
+	tx.Commit()
 
 	context.JSON(http.StatusOK, common.Success(user))
 	return

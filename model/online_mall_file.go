@@ -1,7 +1,7 @@
 package model
 
 type OnlineMallFile struct {
-	ID               string `json:"id"`
+	ID               string `gorm:"primary_key" json:"id"`
 	ReqId            string `json:"reqId"`
 	ReqType          string `json:"reqType"`
 	FileOriginalName string `json:"fileOriginalName"`

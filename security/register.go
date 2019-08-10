@@ -57,9 +57,16 @@ func RegisterUser(context *gin.Context) {
 		}
 		registerUser.CreateTime = time.Now()
 		registerUser.UpdateTime = time.Now()
-		registerUser.Enabled = true
+		registerUser.Enabled = 1
 		registerUser.Version = 1
-		connect.Create(&registerUser)
+
+		tx := connect.Begin()
+		if err := tx.Create(&registerUser).Error; err != nil {
+			tx.Rollback()
+			context.JSON(http.StatusOK, common.Error(http.StatusInternalServerError, err.Error()))
+			return
+		}
+		tx.Commit()
 	}
 
 	context.JSON(http.StatusOK, common.Info())

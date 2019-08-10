@@ -8,7 +8,7 @@ type MstUserInfo struct {
 	Email       string `json:"email"`
 	PhoneNumber string `json:"phoneNumber"`
 	Type        string `json:"type"`
-	Enabled     bool   `json:"enabled"`
+	Enabled     uint8  `json:"enabled"`
 	Remarks     string `json:"remarks"`
 	PublicModel
 }

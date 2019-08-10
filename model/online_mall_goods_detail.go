@@ -2,7 +2,7 @@ package model
 
 //金额使用整型,避免浮点型计算不精确,以分为单位
 type OnlineMallGoodsDetail struct {
-	ID            uint   `json:"id"`
+	ID            uint   `gorm:"primary_key" json:"id"`
 	GoodsId       string `json:"goodsId"`
 	Origin        string `json:"origin"`
 	Price         uint   `json:"price"`
