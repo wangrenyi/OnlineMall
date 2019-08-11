@@ -4,14 +4,14 @@ import "github.com/sirupsen/logrus"
 
 var localLogger = logrus.New()
 
-func Info(msg string) {
+func Info(msg ...interface{}) {
 	localLogger.Info(msg)
 }
 
-func Debug(msg string) {
+func Debug(msg ...interface{}) {
 	localLogger.Debug(msg)
 }
 
-func Error(err error) {
+func Error(err ...interface{}) {
 	localLogger.Error(err)
 }

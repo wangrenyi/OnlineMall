@@ -19,7 +19,7 @@ func Ok() *Result {
 	}
 }
 
-func Error(statusCode int, msg string) *Result {
+func Error(statusCode int, msg interface{}) *Result {
 	return &Result{
 		"msg":        msg,
 		"statusCode": statusCode,
