@@ -2,7 +2,7 @@ package model
 
 type MstUserInfo struct {
 	ID          uint   `gorm:"primary_key" json:"id"`
-	LoginName   string `json:"loginName"`
+	LoginName   string `gorm:"unique_index" json:"loginName"`
 	Password    string `json:"password"`
 	DisplayName string `json:"displayName"`
 	Email       string `json:"email"`
