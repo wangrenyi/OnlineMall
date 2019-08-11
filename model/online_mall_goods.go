@@ -5,7 +5,7 @@ type OnlineMallGoods struct {
 	ShopsId   string `json:"shopsId"`
 	GoodsName string `json:"goodsName"`
 	Category  string `json:"category"`
-	Status    bool   `json:"status"`
+	Status    uint8  `json:"status"`
 	Remarks   string `json:"remarks"`
 	PublicModel
 }

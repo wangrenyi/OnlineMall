@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS `online_mall_shops`
     `shops_rate`        tinyint(4),
     `business_category` varchar(255),
     `qualification`     varchar(255),
+    `status`            tinyint(4)       NOT NULL DEFAULT 1,
     `remarks`           varchar(255),
     `create_user`       varchar(50),
     `create_time`       datetime         NULL     DEFAULT CURRENT_TIMESTAMP,
@@ -30,7 +31,7 @@ CREATE TABLE IF NOT EXISTS `mst_user_info`
     `email`        varchar(50),
     `phone_number` varchar(50),
     `type`         varchar(10)      NOT NULL DEFAULT 'normal', ##普通用户或者管理员用户
-    `enabled`      bit(1)           NOT NULL DEFAULT b'1',     ##标识用户是否有效
+    `enabled`      tinyint(4)       NOT NULL DEFAULT 1,        ##标识用户是否有效
     `remarks`      varchar(255),
     `create_user`  varchar(50),
     `create_time`  datetime         NULL     DEFAULT CURRENT_TIMESTAMP,
@@ -49,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `online_mall_goods`
     `shops_id`    varchar(32)      NOT NULL,
     `goods_name`  varchar(255)     NOT NULL,
     `category`    varchar(255)     NOT NULL,
-    `status`      bit              NOT NULL DEFAULT b'1',
+    `status`      tinyint(4)       NOT NULL DEFAULT 1,
     `remarks`     varchar(255),
     `create_user` varchar(50),
     `create_time` datetime         NULL     DEFAULT CURRENT_TIMESTAMP,

@@ -7,6 +7,7 @@ type OnlineMallShops struct {
 	ShopsRate        uint8  `json:"shopsRate"`
 	BusinessCategory string `json:"businessCategory"`
 	Qualification    string `json:"qualification"`
+	Status           uint8  `json:"status"`
 	Remarks          string `json:"remarks"`
 	PublicModel
 }
