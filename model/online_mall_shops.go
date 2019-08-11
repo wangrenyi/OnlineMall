@@ -2,7 +2,7 @@ package model
 
 type OnlineMallShops struct {
 	ID               string `gorm:"primary_key" json:"id"`
-	UserId           uint   `json:"userId"`
+	UserId           uint   `gorm:"index" json:"userId"`
 	ShopsName        string `json:"shopsName"`
 	ShopsRate        uint8  `json:"shopsRate"`
 	BusinessCategory string `json:"businessCategory"`
