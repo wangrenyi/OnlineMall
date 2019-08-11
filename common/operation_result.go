@@ -12,7 +12,7 @@ func Success(data interface{}) *Result {
 	}
 }
 
-func Info() *Result {
+func Ok() *Result {
 	return &Result{
 		"msg":        "Action successfully done.",
 		"statusCode": http.StatusOK,

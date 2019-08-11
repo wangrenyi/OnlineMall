@@ -1,18 +1,16 @@
 package logging
 
 import (
-	"onlinemall/config"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	rotatelogs "github.com/lestrrat/go-file-rotatelogs"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
+	"onlinemall/config"
 	"os"
 	"path"
 	"time"
 )
-
-var logger = logrus.New()
 
 func LoggerHandler() gin.HandlerFunc {
 	// get log file
@@ -20,7 +18,7 @@ func LoggerHandler() gin.HandlerFunc {
 	logFileName := config.ServerConfig.LogFile
 
 	//init log
-	initLog(logFilePath, logFileName, logger)
+	initLog(logFilePath, logFileName, localLogger)
 
 	//format logger
 	return formatLog
@@ -100,7 +98,7 @@ func formatLog(c *gin.Context) {
 	clientIP := c.ClientIP()
 
 	// 日志格式
-	logger.WithFields(logrus.Fields{
+	localLogger.WithFields(logrus.Fields{
 		"status_code":  statusCode,
 		"latency_time": latencyTime,
 		"client_ip":    clientIP,
@@ -121,14 +119,4 @@ func DBLogger() *logrus.Logger {
 	return dbLogger
 }
 
-func Info(msg string) {
-	logger.Info(msg)
-}
 
-func Debug(msg string) {
-	logger.Debug(msg)
-}
-
-func Error(err error) {
-	logger.Error(err)
-}

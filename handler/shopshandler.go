@@ -17,21 +17,21 @@ func InitShopsHandler(routerGroup *gin.RouterGroup) {
 }
 
 func getShopsByUserId(context *gin.Context) {
-	context.JSON(http.StatusOK, common.Info())
+	context.JSON(http.StatusOK, common.Ok())
 	return
 }
 
 func getShopsDetail(context *gin.Context) {
-	context.JSON(http.StatusOK, common.Info())
+	context.JSON(http.StatusOK, common.Ok())
 	return
 }
 
 func saveShops(context *gin.Context) {
-	context.JSON(http.StatusOK, common.Info())
+	context.JSON(http.StatusOK, common.Ok())
 	return
 }
 
 func deleteShops(context *gin.Context) {
-	context.JSON(http.StatusOK, common.Info())
+	context.JSON(http.StatusOK, common.Ok())
 	return
 }

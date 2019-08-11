@@ -6,13 +6,13 @@
     "MaxOpenConns": 50,
     "ConnMaxLifetime": 2000,
     "LogDir": "/data/app/gin",
-    "LogFile": "gorm"
+    "LogFile": "gorm.log"
   },
   "server": {
     "Environment": "dev",
     "Mod": "debug",
     "LogDir": "/data/app/gin",
-    "LogFile": "app",
+    "LogFile": "app.log",
     "Address": "localhost:9080"
   }
 }

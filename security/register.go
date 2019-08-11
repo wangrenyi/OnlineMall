@@ -69,7 +69,7 @@ func RegisterUser(context *gin.Context) {
 		tx.Commit()
 	}
 
-	context.JSON(http.StatusOK, common.Info())
+	context.JSON(http.StatusOK, common.Ok())
 	return
 }
 

@@ -17,21 +17,21 @@ func InitGoodsHandler(routerGroup *gin.RouterGroup) {
 }
 
 func getGoodsByShops(context *gin.Context) {
-	context.JSON(http.StatusOK, common.Info())
+	context.JSON(http.StatusOK, common.Ok())
 	return
 }
 
 func getGoods(context *gin.Context) {
-	context.JSON(http.StatusOK, common.Info())
+	context.JSON(http.StatusOK, common.Ok())
 	return
 }
 
 func saveGoods(context *gin.Context) {
-	context.JSON(http.StatusOK, common.Info())
+	context.JSON(http.StatusOK, common.Ok())
 	return
 }
 
 func deleteGoods(context *gin.Context) {
-	context.JSON(http.StatusOK, common.Info())
+	context.JSON(http.StatusOK, common.Ok())
 	return
 }

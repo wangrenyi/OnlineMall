@@ -14,7 +14,7 @@ func main() {
 
 	gin.SetMode(serverConfig.Mod)
 	engine := gin.Default()
-	engine.Use(logging.LoggerHandler())
+	engine.Use(logging.WinLoggerHandler())
 
 	//配置跨域
 	engine.Use(cors.New(cors.Config{

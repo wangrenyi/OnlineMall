@@ -73,6 +73,6 @@ func deleteUser(context *gin.Context) {
 	}
 	tx.Commit()
 
-	context.JSON(http.StatusOK, common.Success(user))
+	context.JSON(http.StatusOK, common.Ok())
 	return
 }
