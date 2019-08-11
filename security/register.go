@@ -2,6 +2,7 @@ package security
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 	"net/http"
 	"onlinemall/common"
 	"onlinemall/db"
@@ -12,7 +13,6 @@ import (
 var loginUser = model.MstUserInfo{}
 
 func AuthLogin(context *gin.Context) {
-	defer common.Recover(context)
 
 	user := model.MstUserInfo{}
 	if err := context.ShouldBindJSON(&user); err != nil {
@@ -20,7 +20,11 @@ func AuthLogin(context *gin.Context) {
 		return
 	}
 
-	loginCheck(&user)
+	err := loginCheck(&user)
+	if err != nil {
+		context.JSON(http.StatusOK, common.Error(http.StatusBadRequest, err.Error()))
+		return
+	}
 
 	token, err := GenerateToken(user)
 	if err != nil {
@@ -33,7 +37,6 @@ func AuthLogin(context *gin.Context) {
 }
 
 func RegisterUser(context *gin.Context) {
-	defer common.Recover(context)
 
 	registerUser := model.MstUserInfo{}
 	if err := context.ShouldBindJSON(&registerUser); err != nil {
@@ -73,20 +76,21 @@ func RegisterUser(context *gin.Context) {
 	return
 }
 
-func loginCheck(user *model.MstUserInfo) {
+func loginCheck(user *model.MstUserInfo) error {
 	registerUser := model.MstUserInfo{}
 
 	connect := db.Connect()
 	connect.Where("login_name = ? and enabled = true ", user.LoginName).First(&registerUser)
 
 	if registerUser.LoginName == "" {
-		common.PanicError("The user does not exist!")
+		return errors.New("The user does not exist!")
 	}
 	if registerUser.Password != user.Password || registerUser.LoginName != user.LoginName {
-		common.PanicError("Incorrect account or password!")
+		return errors.New("Incorrect account or password!")
 	}
 
 	loginUser = registerUser
+	return nil
 }
 
 func GetLoginUser() model.MstUserInfo {
