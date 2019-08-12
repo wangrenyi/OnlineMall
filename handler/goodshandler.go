@@ -4,12 +4,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"onlinemall/common"
+	"onlinemall/model"
+	"onlinemall/repository"
 )
 
 func InitGoodsHandler(routerGroup *gin.RouterGroup) {
 	goodssRouter := routerGroup.Group("/goods")
 	{
-		goodssRouter.GET("/list", getGoodsByShops)
+		goodssRouter.GET("", getGoodsByShops)
 		goodssRouter.GET("/detail/:goodsId", getGoods)
 		goodssRouter.POST("", saveGoods)
 		goodssRouter.DELETE("", deleteGoods)
@@ -17,6 +19,17 @@ func InitGoodsHandler(routerGroup *gin.RouterGroup) {
 }
 
 func getGoodsByShops(context *gin.Context) {
+
+	var userId = context.Param("userId")
+
+	shops := model.OnlineMallShops{}
+
+	params := make(map[string]interface{}, 1)
+	params["user_id"] = userId
+
+	baseDAO := repository.NewBaseDAO()
+	baseDAO.UniqueEntityByCondition(&shops, params)
+
 	context.JSON(http.StatusOK, common.Ok())
 	return
 }
