@@ -7,50 +7,95 @@ import (
 	"reflect"
 )
 
+// https://github.com/Ksloveyuan/gorm-ex
+// https://www.bbsmax.com/A/kjdwl7qBzN/
+
 type BaseDAO struct {
 	Connect *gorm.DB
 }
 
-func NewBaseDAO() *BaseDAO {
-	return &BaseDAO{db.Connect()}
+func NewBaseDAO() BaseDAO {
+	return BaseDAO{db.Connect()}
 }
 
-func (baseDAO *BaseDAO) SaveTx(model interface{}) {
-	connect := baseDAO.Connect
+//func (baseDAO baseDAO) SaveTx(model interface{}) {
+//	connect := baseDAO.Connect
+//
+//	tx := connect.Begin()
+//	baseDAO.Save(model, tx)
+//}
 
-	tx := connect.Begin()
-	baseDAO.Save(model, tx)
-}
-
-func (baseDAO *BaseDAO) Save(model interface{}, tx *gorm.DB) {
+func (baseDAO BaseDAO) Save(model interface{}) error {
 	verifyType(model)
 
-	defer commitTrans(tx)
+	connect := baseDAO.Connect
 
-	if err := tx.Create(model).Error; err != nil {
-		panicError(err)
+	if err := connect.Create(model).Error; err != nil {
+		return err
 	}
+
+	return nil
 }
 
-func (baseDAO *BaseDAO) UpdateTx(model interface{}) {
+func (baseDAO BaseDAO) SaveAll(models ...interface{}) error {
 	connect := baseDAO.Connect
 
-	tx := connect.Begin()
-	baseDAO.Update(model, tx)
+	var err error
+	for _, model := range models {
+		if err := connect.Create(model).Error; err != nil {
+			err = err
+		}
+	}
+
+	return err
 }
 
-func (baseDAO *BaseDAO) Update(model interface{}, tx *gorm.DB) {
-	verifyType(model)
+//func (baseDAO baseDAO) UpdateTx(model interface{}) {
+//	connect := baseDAO.Connect
+//
+//	tx := connect.Begin()
+//	baseDAO.Update(model, tx)
+//}
 
-	defer commitTrans(tx)
+func (baseDAO BaseDAO) Update(model interface{}) error {
+	verifyType(model)
+	connect := baseDAO.Connect
 
 	modelValue := valueOf(model).Elem()
-	if err := tx.Model(model).Updates(modelValue).Error; err != nil {
-		panicError(err)
+	if err := connect.Model(model).Updates(modelValue).Error; err != nil {
+		return err
 	}
+
+	return nil
 }
 
-func (baseDAO *BaseDAO) UniqueEntityById(model interface{}) {
+func (baseDAO BaseDAO) UpdateAll(models ...interface{}) error {
+
+	connect := baseDAO.Connect
+
+	var err error
+	for _, model := range models {
+		modelValue := valueOf(model).Elem()
+		if err := connect.Model(model).Updates(modelValue).Error; err != nil {
+			err = err
+		}
+	}
+
+	return err
+}
+
+func (baseDAO BaseDAO) Delete(model interface{}) error {
+	verifyType(model)
+
+	connect := baseDAO.Connect
+	if err := connect.Delete(model).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (baseDAO BaseDAO) UniqueEntityById(model interface{}) {
 	verifyType(model)
 
 	connect := baseDAO.Connect
@@ -59,7 +104,7 @@ func (baseDAO *BaseDAO) UniqueEntityById(model interface{}) {
 	connect.Where("id = ?", _id).First(model)
 }
 
-func (baseDAO *BaseDAO) UniqueEntityByCondition(model interface{}, params map[string]interface{}) {
+func (baseDAO BaseDAO) UniqueEntityByCondition(model interface{}, params map[string]interface{}) {
 	verifyType(model)
 
 	connect := baseDAO.Connect
@@ -72,14 +117,14 @@ func (baseDAO *BaseDAO) UniqueEntityByCondition(model interface{}, params map[st
 	connect.Find(model)
 }
 
-func (baseDAO *BaseDAO) SelectAll(models interface{}) {
+func (baseDAO BaseDAO) SelectAll(models interface{}) {
 	verifyType(models)
 
 	connect := baseDAO.Connect
 	connect.Find(&models)
 }
 
-func (baseDAO *BaseDAO) SelectEntityPaging(models interface{}, params map[string]interface{}) {
+func (baseDAO BaseDAO) SelectEntityPaging(models interface{}, params map[string]interface{}) {
 	verifyType(models)
 
 	connect := baseDAO.Connect
@@ -105,7 +150,7 @@ func whereEq(connect *gorm.DB, propertyName string, propertyValue interface{}) *
 	return connect.Where(propertyName+" = ?", propertyValue)
 }
 
-func (baseDAO *BaseDAO) Count(model interface{}, params map[string]interface{}) int {
+func (baseDAO BaseDAO) Count(model interface{}, params map[string]interface{}) int {
 	verifyType(model)
 
 	connect := baseDAO.Connect

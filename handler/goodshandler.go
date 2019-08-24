@@ -27,8 +27,8 @@ func getGoodsByShops(context *gin.Context) {
 	params := make(map[string]interface{}, 1)
 	params["user_id"] = userId
 
-	baseDAO := repository.NewBaseDAO()
-	baseDAO.UniqueEntityByCondition(&shops, params)
+	mstUserInfoDAO := repository.NewMstUserInfoDAO()
+	mstUserInfoDAO.UniqueEntityByCondition(&shops, params)
 
 	context.JSON(http.StatusOK, common.Ok())
 	return
